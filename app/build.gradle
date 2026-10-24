@@ -1,0 +1,70 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.android.gms.oss-licenses-plugin'
+}
+
+android {
+    namespace = 'com.maulana.MFileManager'
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "com.maulanaid.mfilemanager"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = providers.gradleProperty("appVersionCode").getOrElse("1").toInteger()
+        versionName = providers.gradleProperty("appVersionName").getOrElse("1.0")
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // Keep device-specific APKs available while also producing one universal APK.
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a', 'x86_64'
+            universalApk true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    packaging {
+        resources {
+            excludes += 'META-INF/DEPENDENCIES'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def abi = output.getFilter(com.android.build.OutputFile.ABI) ?: 'universal'
+            def unsignedSuffix = variant.buildType.name == 'release' ? '-unsigned' : ''
+            output.outputFileName = "MFIle-Manager-${abi}-${variant.buildType.name}${unsignedSuffix}.apk"
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    implementation 'org.apache.ftpserver:ftpserver-core:1.2.1'
+    implementation 'org.apache.commons:commons-compress:1.28.0'
+    implementation 'org.tukaani:xz:1.10'
+    implementation 'net.lingala.zip4j:zip4j:2.11.6'
+    implementation 'com.github.junrar:junrar:8.1.2'
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.3.0'
+
+    testImplementation 'junit:junit:4.13.2'
+}

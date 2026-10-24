@@ -1,0 +1,107 @@
+MFile Manager
+Copyright 2024 maulana-id (https://github.com/maulana-id)
+
+This product is licensed under the Apache License, Version 2.0.
+http://www.apache.org/licenses/LICENSE-2.0
+
+================================================================================
+THIRD-PARTY OPEN SOURCE NOTICES
+================================================================================
+
+This application includes the following third-party libraries:
+
+--------------------------------------------------------------------------------
+AndroidX AppCompat (androidx.appcompat:appcompat:1.7.0)
+Copyright 2011 The Android Open Source Project
+License: Apache License 2.0
+https://developer.android.com/jetpack/androidx
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+AndroidX Core (androidx.core:core:1.13.1)
+Copyright 2011 The Android Open Source Project
+License: Apache License 2.0
+https://developer.android.com/jetpack/androidx
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Material Components for Android (com.google.android.material:material:1.12.0)
+Copyright 2014 The Android Open Source Project
+License: Apache License 2.0
+https://github.com/material-components/material-components-android
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+NanoHTTPD (org.nanohttpd:nanohttpd:2.3.1)
+Copyright 2012-2013 by Paul S. Hawke, 2001,2005-2011 by Jarno Elonen,
+2010 by Konstantinos Togias
+License: BSD 3-Clause License
+https://github.com/NanoHttpd/nanohttpd
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+3. Neither the name of the NanoHttpd organization nor the names of its
+   contributors may be used to endorse or promote products derived from this
+   software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Apache FtpServer (org.apache.ftpserver:ftpserver-core:1.2.1)
+Copyright 2008-2021 The Apache Software Foundation
+License: Apache License 2.0
+https://mina.apache.org/ftpserver-project/
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Apache Commons Compress (org.apache.commons:commons-compress:1.28.0)
+Copyright 2002-2024 The Apache Software Foundation
+License: Apache License 2.0
+https://commons.apache.org/proper/commons-compress/
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+XZ for Java (org.tukaani:xz:1.10)
+License: 0BSD (BSD Zero Clause License) / Public Domain
+https://tukaani.org/xz/java.html
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Zip4j (net.lingala.zip4j:zip4j:2.11.6)
+Copyright 2019 Srikanth Reddy Lingala
+License: Apache License 2.0
+https://github.com/srikanth-lingala/zip4j
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+junrar (com.github.junrar:junrar:8.1.2)
+License: UnRar License (source-available, restricted use)
+https://github.com/junrar/junrar
+
+IMPORTANT NOTICE: The junrar library is based on the unRAR source code and is
+subject to the unRAR license restriction: "The unRAR sources may be used in
+any software to handle RAR archives without limitations free of charge, but
+cannot be used to re-create the RAR compression algorithm, which is proprietary."
+This application uses junrar solely for READING/EXTRACTING RAR archives and
+does NOT implement RAR compression. This use is compliant with the unRAR license.
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Google Play Services OSS Licenses Plugin
+(com.google.android.gms:play-services-oss-licenses:17.3.0)
+Copyright Google LLC
+License: Google APIs Terms of Service (proprietary)
+https://developers.google.com/android/guides/setup
+--------------------------------------------------------------------------------
+
+================================================================================
+END OF THIRD-PARTY NOTICES
+================================================================================

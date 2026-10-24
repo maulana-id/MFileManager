@@ -1,0 +1,173 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="6dp"
+    tools:context=".MainActivity">
+
+    <!-- Title and settings bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="2dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_name"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <ImageButton
+            android:id="@+id/settingsButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Settings"
+            android:src="@drawable/ic_action_settings"
+            android:tooltipText="Settings" />
+    </LinearLayout>
+
+    <!-- Navigation and path bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="2dp">
+        <ImageButton
+            android:id="@+id/homeButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Home folder"
+            android:src="@drawable/ic_action_home"
+            android:tooltipText="Home folder" />
+        <ImageButton
+            android:id="@+id/upButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Parent folder"
+            android:src="@drawable/ic_action_up"
+            android:tooltipText="Parent folder" />
+        <EditText
+            android:id="@+id/pathInput"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:hint="Folder path"
+            android:textSize="12sp"
+            android:inputType="textUri"
+            android:maxLines="1"
+            android:selectAllOnFocus="true" />
+        <ImageButton
+            android:id="@+id/goButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Go to path"
+            android:src="@drawable/ic_action_go"
+            android:tooltipText="Go to path" />
+        <ImageButton
+            android:id="@+id/createButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Create folder or file"
+            android:src="@drawable/ic_action_add"
+            android:tooltipText="Create folder or file" />
+    </LinearLayout>
+
+    <!-- Search input -->
+    <EditText
+        android:id="@+id/searchInput"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_marginBottom="2dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:hint="Search files and folders"
+        android:textSize="12sp"
+        android:inputType="text"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/selectionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textSize="11sp"
+        android:text="Nothing selected" />
+
+    <!-- Unified tree/file list -->
+    <ListView
+        android:id="@+id/fileList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:choiceMode="none"
+        android:dividerHeight="0.5dp" />
+
+    <!-- Share status footer -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="2dp">
+        <TextView
+            android:id="@+id/httpShareStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:text="HTTP sharing is off"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        <ImageButton
+            android:id="@+id/copyHttpShareUrlButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Copy HTTP share address"
+            android:src="@drawable/ic_action_copy"
+            android:tooltipText="Copy HTTP share address"
+            android:visibility="gone" />
+        <ImageButton
+            android:id="@+id/stopHttpShareButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Stop HTTP sharing"
+            android:src="@drawable/ic_action_stop"
+            android:tooltipText="Stop HTTP sharing"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>
