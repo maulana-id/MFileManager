@@ -1,6 +1,6 @@
 # MFIle Manager
 
-Android application ID: `com.maulanaid.mfilemanager`.
+Android application ID: `com.maulanaid.MFileManager`.
 
 A simple Android file manager for browsing shared storage and performing basic file operations.
 

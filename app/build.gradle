@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = 'com.maulana.MFileManager'
+    namespace = 'com.maulanaid.MFileManager'
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.maulanaid.mfilemanager"
+        applicationId = "com.maulanaid.MFileManager"
         minSdk = 24
         targetSdk = 34
         versionCode = providers.gradleProperty("appVersionCode").getOrElse("1").toInteger()
