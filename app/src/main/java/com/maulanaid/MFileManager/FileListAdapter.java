@@ -16,7 +16,7 @@
  * @author maulana-id
  */
 
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -63,7 +63,7 @@ public final class FileListAdapter extends BaseAdapter {
         final boolean hasChildren;
 
         private Row(File file, String title, String details, boolean selected,
-                    int depth, boolean isDirectory, boolean isExpanded, boolean hasChildren) {
+                int depth, boolean isDirectory, boolean isExpanded, boolean hasChildren) {
             this.file = file;
             this.title = title;
             this.details = details;
@@ -79,7 +79,7 @@ public final class FileListAdapter extends BaseAdapter {
         }
 
         public static Row treeNode(File file, String details, boolean selected,
-                                   int depth, boolean isDirectory, boolean isExpanded, boolean hasChildren) {
+                int depth, boolean isDirectory, boolean isExpanded, boolean hasChildren) {
             return new Row(file, null, details, selected, depth, isDirectory, isExpanded, hasChildren);
         }
 
@@ -164,7 +164,8 @@ public final class FileListAdapter extends BaseAdapter {
         Row row = getItem(position);
         if (row.isHeading()) {
             TextView heading = convertView instanceof TextView
-                    ? (TextView) convertView : new TextView(parent.getContext());
+                    ? (TextView) convertView
+                    : new TextView(parent.getContext());
             heading.setText(row.title);
             heading.setTextAppearance(androidx.appcompat.R.style.TextAppearance_AppCompat_Small);
             int horizontal = dp(parent.getContext(), 8);
@@ -337,7 +338,7 @@ public final class FileListAdapter extends BaseAdapter {
     private Bitmap pdfThumbnail(File file) throws IOException {
         try (ParcelFileDescriptor descriptor = ParcelFileDescriptor.open(
                 file, ParcelFileDescriptor.MODE_READ_ONLY);
-             PdfRenderer renderer = new PdfRenderer(descriptor)) {
+                PdfRenderer renderer = new PdfRenderer(descriptor)) {
             if (renderer.getPageCount() == 0) {
                 return null;
             }
@@ -438,7 +439,8 @@ public final class FileListAdapter extends BaseAdapter {
     }
 
     private boolean isCode(String extension) {
-        return hasExtension(extension, "java", "kt", "py", "js", "ts", "json", "xml", "html", "css", "gradle", "sh", "c", "cpp");
+        return hasExtension(extension, "java", "kt", "py", "js", "ts", "json", "xml", "html", "css", "gradle", "sh",
+                "c", "cpp");
     }
 
     private boolean isDocument(String extension) {

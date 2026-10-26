@@ -16,7 +16,7 @@
  * @author maulana-id
  */
 
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -67,9 +67,9 @@ import java.util.zip.ZipOutputStream;
 import fi.iki.elonen.NanoHTTPD;
 
 public final class HttpShareService extends Service {
-    public static final String ACTION_START = "com.maulana.MFileManager.HTTP_SHARE_START";
-    public static final String ACTION_STOP = "com.maulana.MFileManager.HTTP_SHARE_STOP";
-    public static final String ACTION_STATUS_CHANGED = "com.maulana.MFileManager.HTTP_SHARE_STATUS";
+    public static final String ACTION_START = "com.maulanaid.MFileManager.HTTP_SHARE_START";
+    public static final String ACTION_STOP = "com.maulanaid.MFileManager.HTTP_SHARE_STOP";
+    public static final String ACTION_STATUS_CHANGED = "com.maulanaid.MFileManager.HTTP_SHARE_STATUS";
     public static final String EXTRA_SHARED_PATH = "shared_path";
     public static final int PORT = 8080;
 
@@ -139,9 +139,9 @@ public final class HttpShareService extends Service {
             stopServer();
             clearShareState();
             getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
-                .putString(PREF_HTTP_ERROR,
-                    "Could not start sharing. Check that port 8080 is free and the item is readable.")
-                .apply();
+                    .putString(PREF_HTTP_ERROR,
+                            "Could not start sharing. Check that port 8080 is free and the item is readable.")
+                    .apply();
             stopForeground(true);
             stopSelf();
             notifyStatusChanged();
@@ -294,7 +294,7 @@ public final class HttpShareService extends Service {
             if (!authorized(session)) {
                 Response response = text(Response.Status.UNAUTHORIZED, "Authentication required");
                 response.addHeader("WWW-Authenticate",
-                    "Basic realm=\"MFIle Manager HTTP share\", charset=\"UTF-8\"");
+                        "Basic realm=\"MFIle Manager HTTP share\", charset=\"UTF-8\"");
                 return response;
             }
             try {
@@ -364,11 +364,11 @@ public final class HttpShareService extends Service {
             String title = rootIsDirectory ? (relative.isEmpty() ? root.getName() : directory.getName())
                     : root.getName();
             boolean darkTheme = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-                .getBoolean(PREF_DARK_THEME, false);
+                    .getBoolean(PREF_DARK_THEME, false);
             SimpleDateFormat modifiedDateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm", Locale.getDefault());
+                    "yyyy-MM-dd HH:mm", Locale.getDefault());
             StringBuilder page = new StringBuilder(4096);
-                page.append("<!doctype html><html lang=\"en\" class=\"")
+            page.append("<!doctype html><html lang=\"en\" class=\"")
                     .append(darkTheme ? "dark" : "light")
                     .append("\"><meta charset=\"utf-8\">")
                     .append("<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">")
@@ -415,7 +415,7 @@ public final class HttpShareService extends Service {
                 page.append("<div class=\"row\">");
                 if (rootIsDirectory) {
                     page.append("<input type=\"checkbox\" class=\"pick\" data-path=\"")
-                        .append(escapeHtml(childRelative)).append("\">");
+                            .append(escapeHtml(childRelative)).append("\">");
                 }
                 page.append("<span class=\"name\">");
                 if (child.isDirectory()) {
@@ -455,7 +455,7 @@ public final class HttpShareService extends Service {
                     .append("if(!p.has('path')){statusBox.textContent='Select at least one item.';return;}")
                     .append("location.href='/download.zip?'+p.toString();};");
             page.append("const currentTheme=document.documentElement.classList.contains('dark')?'dark':'light';")
-                        .append("setInterval(async()=>{try{const r=await fetch('/theme',{cache:'no-store'});if(r.ok&&(await r.text())!==currentTheme)location.reload();}catch(error){}},3000);");
+                    .append("setInterval(async()=>{try{const r=await fetch('/theme',{cache:'no-store'});if(r.ok&&(await r.text())!==currentTheme)location.reload();}catch(error){}},3000);");
             if (rootIsDirectory) {
                 page.append("const conflictDialog=document.getElementById('upload-conflict');let resolveConflict=null;")
                         .append("conflictDialog.addEventListener('click',e=>{const button=e.target.closest('[data-choice]');if(button&&resolveConflict){const resolve=resolveConflict;resolveConflict=null;conflictDialog.close();resolve(button.dataset.choice);}});")
@@ -470,13 +470,13 @@ public final class HttpShareService extends Service {
                         .append("statusBox.textContent=await r.text();if(r.ok)setTimeout(()=>location.reload(),700);")
                         .append("}catch(error){statusBox.textContent='Delete request failed.';}};");
                 page.append("document.getElementById('files').onchange=async e=>{const files=[...e.target.files];")
-                    .append("let uploaded=0,skipped=0,failed=0,cancelled=false,replaceAll=false,skipAll=false;")
+                        .append("let uploaded=0,skipped=0,failed=0,cancelled=false,replaceAll=false,skipAll=false;")
                         .append("for(let i=0;i<files.length;i++){const f=files[i];statusBox.textContent=`Uploading ${i+1}/${files.length}: ${f.name}`;")
-                    .append("try{let u='/upload?directory='+encodeURIComponent(document.body.dataset.directory)+'&name='+encodeURIComponent(f.name);let r=await fetch(u+(replaceAll?'&overwrite=1':''),{method:'PUT',body:f});")
-                    .append("if(r.status===409){let choice=skipAll?'skip':replaceAll?'replace':await askUploadConflict(f.name);if(choice==='cancel'){cancelled=true;break;}if(choice==='skip'){skipped++;continue;}if(choice==='skip-all'){skipAll=true;skipped++;continue;}if(choice==='replace-all')replaceAll=true;r=await fetch(u+'&overwrite=1',{method:'PUT',body:f});}")
-                    .append("if(!r.ok){failed++;statusBox.textContent=`${f.name}: ${await r.text()}`;}else{uploaded++;statusBox.textContent=`Uploaded ${uploaded}/${files.length}`;}")
-                    .append("}catch(error){failed++;statusBox.textContent=`Upload failed: ${f.name}`;}}")
-                    .append("e.target.value='';statusBox.textContent=`Upload finished: ${uploaded} uploaded, ${skipped} skipped, ${failed} failed${cancelled?' (remaining files cancelled)':''}. Refreshing...`;")
+                        .append("try{let u='/upload?directory='+encodeURIComponent(document.body.dataset.directory)+'&name='+encodeURIComponent(f.name);let r=await fetch(u+(replaceAll?'&overwrite=1':''),{method:'PUT',body:f});")
+                        .append("if(r.status===409){let choice=skipAll?'skip':replaceAll?'replace':await askUploadConflict(f.name);if(choice==='cancel'){cancelled=true;break;}if(choice==='skip'){skipped++;continue;}if(choice==='skip-all'){skipAll=true;skipped++;continue;}if(choice==='replace-all')replaceAll=true;r=await fetch(u+'&overwrite=1',{method:'PUT',body:f});}")
+                        .append("if(!r.ok){failed++;statusBox.textContent=`${f.name}: ${await r.text()}`;}else{uploaded++;statusBox.textContent=`Uploaded ${uploaded}/${files.length}`;}")
+                        .append("}catch(error){failed++;statusBox.textContent=`Upload failed: ${f.name}`;}}")
+                        .append("e.target.value='';statusBox.textContent=`Upload finished: ${uploaded} uploaded, ${skipped} skipped, ${failed} failed${cancelled?' (remaining files cancelled)':''}. Refreshing...`;")
                         .append("setTimeout(()=>location.reload(),1000);};");
             }
             page.append("</script></main></body></html>");
@@ -518,7 +518,8 @@ public final class HttpShareService extends Service {
                     Set<String> visited = new HashSet<>();
                     for (File file : files) {
                         String entryName = rootIsDirectory
-                                ? relativePath(file) : file.getName();
+                                ? relativePath(file)
+                                : file.getName();
                         addToZip(zip, file, entryName, visited);
                     }
                 } catch (IOException ignored) {
@@ -537,7 +538,7 @@ public final class HttpShareService extends Service {
         }
 
         private void addToZip(ZipOutputStream zip, File file, String entryName,
-                              Set<String> visited) throws IOException {
+                Set<String> visited) throws IOException {
             File safe = file.getCanonicalFile();
             if (!isInsideRoot(safe) || !visited.add(safe.getPath())) {
                 return;
@@ -672,7 +673,7 @@ public final class HttpShareService extends Service {
             File temporary = new File(directory, ".upload-" + UUID.randomUUID());
             boolean written = false;
             try (InputStream input = session.getInputStream();
-                 OutputStream output = new BufferedOutputStream(new FileOutputStream(temporary))) {
+                    OutputStream output = new BufferedOutputStream(new FileOutputStream(temporary))) {
                 byte[] buffer = new byte[32 * 1024];
                 long remaining = contentLength;
                 while (remaining > 0) {

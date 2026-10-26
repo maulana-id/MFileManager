@@ -16,7 +16,7 @@
  * @author maulana-id
  */
 
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -60,7 +60,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_player);
 
         String filePath = getIntent().getStringExtra(EXTRA_FILE_PATH);
-        if (filePath == null) { finish(); return; }
+        if (filePath == null) {
+            finish();
+            return;
+        }
 
         String fileName = filePath.contains("/") ? filePath.substring(filePath.lastIndexOf('/') + 1) : filePath;
 
@@ -101,18 +104,26 @@ public class VideoPlayerActivity extends AppCompatActivity {
         playPauseButton.setOnClickListener(v -> togglePlayPause());
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override public void onProgressChanged(SeekBar sb, int progress, boolean fromUser) {
+            @Override
+            public void onProgressChanged(SeekBar sb, int progress, boolean fromUser) {
                 if (fromUser) {
                     videoView.seekTo(progress);
                     currentTimeView.setText(formatTime(progress));
                 }
             }
-            @Override public void onStartTrackingTouch(SeekBar sb) {}
-            @Override public void onStopTrackingTouch(SeekBar sb) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar sb) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar sb) {
+            }
         });
 
         updateSeekBar = new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 if (videoView.isPlaying()) {
                     int pos = videoView.getCurrentPosition();
                     seekBar.setProgress(pos);

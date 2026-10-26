@@ -1,4 +1,4 @@
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import org.junit.After;
 import org.junit.Before;
@@ -50,7 +50,8 @@ public class ArchiveManagerTest {
         for (ArchiveManager.Format format : formats) {
             File archive = new File(workDirectory, format.name() + format.extension());
             List<File> sources = format == ArchiveManager.Format.GZIP
-                    ? Arrays.asList(sourceFile) : Arrays.asList(sourceDirectory);
+                    ? Arrays.asList(sourceFile)
+                    : Arrays.asList(sourceDirectory);
             ArchiveManager.Result result = ArchiveManager.create(sources, archive, format, null);
 
             assertTrue(archive.isFile());

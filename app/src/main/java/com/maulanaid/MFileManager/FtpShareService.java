@@ -16,7 +16,7 @@
  * @author maulana-id
  */
 
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -52,8 +52,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 public final class FtpShareService extends Service {
-    public static final String ACTION_START = "com.maulana.MFileManager.FTP_SHARE_START";
-    public static final String ACTION_STOP = "com.maulana.MFileManager.FTP_SHARE_STOP";
+    public static final String ACTION_START = "com.maulanaid.MFileManager.FTP_SHARE_START";
+    public static final String ACTION_STOP = "com.maulanaid.MFileManager.FTP_SHARE_STOP";
     public static final int PORT = 2121;
     public static final String PASSIVE_PORTS = "21210-21219";
     public static final String EXTRA_SHARED_PATH = "shared_path";
@@ -126,8 +126,7 @@ public final class FtpShareService extends Service {
             user.setAuthorities(Collections.<Authority>emptyList());
             userManager.save(user);
 
-            DataConnectionConfigurationFactory dataConfiguration =
-                    new DataConnectionConfigurationFactory();
+            DataConnectionConfigurationFactory dataConfiguration = new DataConnectionConfigurationFactory();
             dataConfiguration.setPassivePorts(PASSIVE_PORTS);
             dataConfiguration.setActiveEnabled(false);
 

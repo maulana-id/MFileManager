@@ -16,7 +16,7 @@
  * @author maulana-id
  */
 
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -51,7 +51,10 @@ public class TextEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_text_editor);
 
         String filePath = getIntent().getStringExtra(EXTRA_FILE_PATH);
-        if (filePath == null) { finish(); return; }
+        if (filePath == null) {
+            finish();
+            return;
+        }
 
         file = new File(filePath);
         String fileName = file.getName();
@@ -77,9 +80,16 @@ public class TextEditorActivity extends AppCompatActivity {
         loadFile();
 
         editor.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override public void afterTextChanged(Editable s) {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
                 if (!hasUnsavedChanges) {
                     hasUnsavedChanges = true;
                     showUnsavedStatus();
@@ -134,8 +144,7 @@ public class TextEditorActivity extends AppCompatActivity {
             try (FileWriter writer = new FileWriter(file, false)) {
                 writer.write(content);
             } catch (IOException e) {
-                runOnUiThread(() ->
-                        Toast.makeText(this, "Failed to save file", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, "Failed to save file", Toast.LENGTH_SHORT).show());
                 return;
             }
             runOnUiThread(() -> {

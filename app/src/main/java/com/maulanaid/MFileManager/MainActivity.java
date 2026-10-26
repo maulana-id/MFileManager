@@ -16,7 +16,7 @@
  * @author maulana-id
  */
 
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -144,7 +144,8 @@ public class MainActivity extends AppCompatActivity {
     private final List<FileListAdapter.Row> displayRows = new ArrayList<>();
     private final ExecutorService archiveExecutor = Executors.newSingleThreadExecutor();
     private final ExecutorService renderExecutor = Executors.newSingleThreadExecutor();
-    private final java.util.concurrent.atomic.AtomicInteger renderGeneration = new java.util.concurrent.atomic.AtomicInteger(0);
+    private final java.util.concurrent.atomic.AtomicInteger renderGeneration = new java.util.concurrent.atomic.AtomicInteger(
+            0);
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private SharedPreferences preferences;
     private String grouping = GROUP_NONE;
@@ -169,7 +170,8 @@ public class MainActivity extends AppCompatActivity {
         preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         darkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
         AppCompatDelegate.setDefaultNightMode(darkTheme
-                ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+                ? AppCompatDelegate.MODE_NIGHT_YES
+                : AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -374,12 +376,12 @@ public class MainActivity extends AppCompatActivity {
                 showFiles();
             }
         } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
+                || checkSelfPermission(
+                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             showFiles();
         } else {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            requestPermissions(new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE }, PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -495,7 +497,8 @@ public class MainActivity extends AppCompatActivity {
             darkTheme = !darkTheme;
             preferences.edit().putBoolean(PREF_DARK_THEME, darkTheme).apply();
             AppCompatDelegate.setDefaultNightMode(darkTheme
-                    ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+                    ? AppCompatDelegate.MODE_NIGHT_YES
+                    : AppCompatDelegate.MODE_NIGHT_NO);
             recreate();
             return true;
         });
@@ -503,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addSettingChoice(SubMenu menu, String title, String value,
-                                  String selectedValue, String preferenceKey, boolean isGrouping) {
+            String selectedValue, String preferenceKey, boolean isGrouping) {
         MenuItem item = menu.add(Menu.NONE, Menu.NONE, Menu.NONE, title);
         item.setCheckable(true).setChecked(value.equals(selectedValue));
         item.setOnMenuItemClickListener(selected -> {
@@ -537,31 +540,31 @@ public class MainActivity extends AppCompatActivity {
             actions.add(new ActionItem("Open with", R.drawable.ic_action_open,
                     () -> openFile(pressedFile)));
             actions.add(new ActionItem("Open as...", R.drawable.ic_action_open,
-                () -> showOpenAsDialog(pressedFile)));
+                    () -> showOpenAsDialog(pressedFile)));
         }
         if (selectedFiles.size() == 1) {
             if (pressedFile.getParentFile() != null) {
-            actions.add(new ActionItem("Rename", R.drawable.ic_action_rename,
-                () -> showRenameDialog(pressedFile)));
+                actions.add(new ActionItem("Rename", R.drawable.ic_action_rename,
+                        () -> showRenameDialog(pressedFile)));
             }
             actions.add(new ActionItem("Properties", R.drawable.ic_action_info,
-                () -> showPropertiesDialog(pressedFile)));
+                    () -> showPropertiesDialog(pressedFile)));
         }
-            if (selectedFiles.size() == 1 && ArchiveManager.isSupportedArchive(pressedFile)) {
-                actions.add(new ActionItem("Browse archive", R.drawable.ic_file_archive,
+        if (selectedFiles.size() == 1 && ArchiveManager.isSupportedArchive(pressedFile)) {
+            actions.add(new ActionItem("Browse archive", R.drawable.ic_file_archive,
                     () -> showArchivePasswordDialog(pressedFile, false)));
-                actions.add(new ActionItem("Extract archive...", R.drawable.ic_file_archive,
+            actions.add(new ActionItem("Extract archive...", R.drawable.ic_file_archive,
                     () -> showArchivePasswordDialog(pressedFile, true)));
-            }
-            if (!selectedFiles.isEmpty()) {
-                actions.add(new ActionItem("Compress " + selectedFiles.size() + " item(s)...",
+        }
+        if (!selectedFiles.isEmpty()) {
+            actions.add(new ActionItem("Compress " + selectedFiles.size() + " item(s)...",
                     R.drawable.ic_file_archive, this::showArchiveFormatChooser));
-            }
+        }
         actions.add(new ActionItem("Share this file/folder over HTTP",
-            R.drawable.ic_action_share, () -> requestHttpShare(pressedFile)));
+                R.drawable.ic_action_share, () -> requestHttpShare(pressedFile)));
         if (pressedFile.isDirectory()) {
             actions.add(new ActionItem("Share folder over FTP (read-only)",
-                R.drawable.ic_action_share, () -> requestFtpShare(pressedFile)));
+                    R.drawable.ic_action_share, () -> requestFtpShare(pressedFile)));
         }
         actions.add(new ActionItem("Copy " + selectedFiles.size() + " item(s)",
                 R.drawable.ic_action_copy, this::copySelected));
@@ -672,8 +675,7 @@ public class MainActivity extends AppCompatActivity {
         final Set<File> selected = new LinkedHashSet<>(selectedFiles);
         final List<File> flatFiles = new ArrayList<>(allFiles);
         final Comparator<File> cmp = fileComparator();
-        final SimpleDateFormat dateFmt =
-                new SimpleDateFormat("MMM d", Locale.getDefault());
+        final SimpleDateFormat dateFmt = new SimpleDateFormat("MMM d", Locale.getDefault());
         // Capture current scroll position so we can restore it after the render
         final int savedScrollPos = fileList.getFirstVisiblePosition();
         final View savedTopChild = fileList.getChildAt(0);
@@ -681,7 +683,8 @@ public class MainActivity extends AppCompatActivity {
 
         renderExecutor.execute(() -> {
             // Abort if a newer render has been requested
-            if (renderGeneration.get() != gen) return;
+            if (renderGeneration.get() != gen)
+                return;
 
             // Per-pass cache: directory path → its children array
             Map<String, File[]> dirCache = new HashMap<>();
@@ -703,12 +706,11 @@ public class MainActivity extends AppCompatActivity {
                 filtered.sort(cmp);
 
                 if (GROUP_TYPE.equals(grp)) {
-                    Map<String, List<File>> groups =
-                            new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                    Map<String, List<File>> groups = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
                     for (File f : filtered) {
                         String key = f.isDirectory() ? "Folders"
                                 : fileExtension(f).isEmpty() ? "Files without extension"
-                                : "Files ." + fileExtension(f);
+                                        : "Files ." + fileExtension(f);
                         groups.computeIfAbsent(key, k -> new ArrayList<>()).add(f);
                     }
                     for (Map.Entry<String, List<File>> e : groups.entrySet()) {
@@ -732,7 +734,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if (renderGeneration.get() != gen) return; // discard if superseded
+            if (renderGeneration.get() != gen)
+                return; // discard if superseded
 
             mainHandler.post(() -> {
                 displayRows.clear();
@@ -749,15 +752,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /** Recursively builds tree rows into the provided lists using a shared dirCache. */
+    /**
+     * Recursively builds tree rows into the provided lists using a shared dirCache.
+     */
     private void buildTreeRows(File directory, int depth,
-                               String query, Set<String> expanded, Set<File> selected,
-                               Comparator<File> cmp,
-                               List<FileListAdapter.Row> rows, List<File> rowFiles,
-                               Map<String, File[]> dirCache,
-                               SimpleDateFormat dateFmt) {
+            String query, Set<String> expanded, Set<File> selected,
+            Comparator<File> cmp,
+            List<FileListAdapter.Row> rows, List<File> rowFiles,
+            Map<String, File[]> dirCache,
+            SimpleDateFormat dateFmt) {
         File[] children = cachedListFiles(directory, dirCache);
-        if (children == null) return;
+        if (children == null)
+            return;
 
         List<File> childList = new ArrayList<>(Arrays.asList(children));
         childList.sort(cmp);
@@ -766,7 +772,8 @@ public class MainActivity extends AppCompatActivity {
             boolean isDir = file.isDirectory();
             boolean matchesSearch = query.isEmpty()
                     || file.getName().toLowerCase(Locale.ROOT).contains(query);
-            if (!query.isEmpty() && !matchesSearch && !isDir) continue;
+            if (!query.isEmpty() && !matchesSearch && !isDir)
+                continue;
 
             boolean isExpanded = isDir && expanded.contains(file.getAbsolutePath());
             File[] grandChildren = isDir ? cachedListFiles(file, dirCache) : null;
@@ -776,8 +783,7 @@ public class MainActivity extends AppCompatActivity {
                     file,
                     fileDetailsFromCache(file, grandChildren, dateFmt),
                     selected.contains(file),
-                    depth, isDir, isExpanded, hasChildren
-            ));
+                    depth, isDir, isExpanded, hasChildren));
             rowFiles.add(file);
 
             if (isDir && isExpanded) {
@@ -788,8 +794,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buildFlatRows(String groupName, List<File> files, Set<File> selected,
-                               List<FileListAdapter.Row> rows, List<File> rowFiles,
-                               Map<String, File[]> dirCache, SimpleDateFormat dateFmt) {
+            List<FileListAdapter.Row> rows, List<File> rowFiles,
+            Map<String, File[]> dirCache, SimpleDateFormat dateFmt) {
         if (groupName != null) {
             rows.add(FileListAdapter.Row.heading(groupName));
             rowFiles.add(null);
@@ -805,15 +811,19 @@ public class MainActivity extends AppCompatActivity {
     /** Returns cached listFiles result, or fetches and stores it. */
     private File[] cachedListFiles(File dir, Map<String, File[]> cache) {
         String key = dir.getAbsolutePath();
-        if (cache.containsKey(key)) return cache.get(key);
+        if (cache.containsKey(key))
+            return cache.get(key);
         File[] result = dir.listFiles();
         cache.put(key, result);
         return result;
     }
 
-    /** Builds the detail string without calling listFiles() again — uses already-fetched array. */
+    /**
+     * Builds the detail string without calling listFiles() again — uses
+     * already-fetched array.
+     */
     private String fileDetailsFromCache(File file, File[] cachedChildren,
-                                        SimpleDateFormat dateFmt) {
+            SimpleDateFormat dateFmt) {
         String modified = dateFmt.format(new Date(file.lastModified()));
         if (file.isDirectory()) {
             String count = cachedChildren != null
@@ -1131,8 +1141,8 @@ public class MainActivity extends AppCompatActivity {
         }
         new AlertDialog.Builder(this)
                 .setTitle("Compress " + sources.size() + " item(s) as")
-                .setItems(labels.toArray(new String[0]), (dialog, which) ->
-                        showArchiveCreateDialog(sources, formats.get(which)))
+                .setItems(labels.toArray(new String[0]),
+                        (dialog, which) -> showArchiveCreateDialog(sources, formats.get(which)))
                 .show();
     }
 
@@ -1152,7 +1162,7 @@ public class MainActivity extends AppCompatActivity {
         fields.setPadding(padding, 0, padding, 0);
 
         String baseName = sources.size() == 1
-            ? archiveBaseName(sources.get(0))
+                ? archiveBaseName(sources.get(0))
                 : currentDirectory.getName();
         if (baseName.isEmpty()) {
             baseName = "Archive";
@@ -1195,7 +1205,8 @@ public class MainActivity extends AppCompatActivity {
                     String lowerName = name.toLowerCase(Locale.ROOT);
                     String extension = format.extension();
                     String outputName = lowerName.endsWith(extension)
-                            ? name : name + extension;
+                            ? name
+                            : name + extension;
                     File output = new File(currentDirectory, outputName);
                     if (output.exists()) {
                         nameInput.setError("An item with this name already exists");
@@ -1436,7 +1447,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void processPasteItem(List<File> sources, int index, File targetDirectory,
-                                  int conflictPolicy, PasteProgress progress) {
+            int conflictPolicy, PasteProgress progress) {
         if (index >= sources.size()) {
             finishPaste(progress, false);
             return;
@@ -1449,7 +1460,7 @@ public class MainActivity extends AppCompatActivity {
             String destinationPath = destination.getCanonicalPath();
             if (sourcePath.equals(destinationPath)
                     || (source.isDirectory()
-                    && destinationPath.startsWith(sourcePath + File.separator))) {
+                            && destinationPath.startsWith(sourcePath + File.separator))) {
                 progress.failed++;
                 processPasteItem(sources, index + 1, targetDirectory, conflictPolicy, progress);
                 return;
@@ -1461,7 +1472,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (destination.exists() && conflictPolicy == CONFLICT_ASK) {
-            String[] choices = {"Replace", "Skip", "Replace all", "Skip all", "Cancel"};
+            String[] choices = { "Replace", "Skip", "Replace all", "Skip all", "Cancel" };
             new AlertDialog.Builder(this)
                     .setTitle("Already exists: " + source.getName())
                     .setMessage("Replacing a folder merges it and overwrites matching files.")
@@ -1562,13 +1573,15 @@ public class MainActivity extends AppCompatActivity {
             mimeType = "*/*";
         }
         // Try internal viewers first
-        if (openFileInternally(file, mimeType)) return;
+        if (openFileInternally(file, mimeType))
+            return;
         openFileWithMimeType(file, mimeType);
     }
 
     /** Returns true if an internal viewer handled the file. */
     private boolean openFileInternally(File file, String mimeType) {
-        if (mimeType == null) return false;
+        if (mimeType == null)
+            return false;
         if (mimeType.startsWith("image/")) {
             Intent intent = new Intent(this, ImageViewerActivity.class);
             intent.putExtra(ImageViewerActivity.EXTRA_FILE_PATH, file.getAbsolutePath());
@@ -1598,13 +1611,40 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isTextExtension(String ext) {
         switch (ext) {
-            case "txt": case "md": case "log": case "json": case "xml":
-            case "yaml": case "yml": case "toml": case "ini": case "cfg":
-            case "conf": case "sh": case "bash": case "py": case "js":
-            case "ts": case "java": case "kt": case "c": case "cpp":
-            case "h": case "cs": case "go": case "rs": case "rb":
-            case "php": case "html": case "css": case "sql": case "csv":
-            case "properties": case "gradle": case "bat": case "ps1":
+            case "txt":
+            case "md":
+            case "log":
+            case "json":
+            case "xml":
+            case "yaml":
+            case "yml":
+            case "toml":
+            case "ini":
+            case "cfg":
+            case "conf":
+            case "sh":
+            case "bash":
+            case "py":
+            case "js":
+            case "ts":
+            case "java":
+            case "kt":
+            case "c":
+            case "cpp":
+            case "h":
+            case "cs":
+            case "go":
+            case "rs":
+            case "rb":
+            case "php":
+            case "html":
+            case "css":
+            case "sql":
+            case "csv":
+            case "properties":
+            case "gradle":
+            case "bat":
+            case "ps1":
                 return true;
             default:
                 return false;
@@ -1612,15 +1652,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showOpenAsDialog(File file) {
-        String[] labels = {"Automatic", "Text editor (built-in)", "Image viewer (built-in)",
+        String[] labels = { "Automatic", "Text editor (built-in)", "Image viewer (built-in)",
                 "Audio player (built-in)", "Video player (built-in)",
                 "Text / source code", "Audio", "Video", "Image",
-                "PDF", "APK installer", "Archive", "Any file type"};
+                "PDF", "APK installer", "Archive", "Any file type" };
         new AlertDialog.Builder(this)
                 .setTitle("Open as")
                 .setItems(labels, (dialog, which) -> {
                     switch (which) {
-                        case 0: openFile(file); break;
+                        case 0:
+                            openFile(file);
+                            break;
                         case 1: {
                             Intent i = new Intent(this, TextEditorActivity.class);
                             i.putExtra(TextEditorActivity.EXTRA_FILE_PATH, file.getAbsolutePath());
@@ -1645,14 +1687,30 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(i);
                             break;
                         }
-                        case 5:  openFileWithMimeType(file, "text/plain"); break;
-                        case 6:  openFileWithMimeType(file, "audio/*"); break;
-                        case 7:  openFileWithMimeType(file, "video/*"); break;
-                        case 8:  openFileWithMimeType(file, "image/*"); break;
-                        case 9:  openFileWithMimeType(file, "application/pdf"); break;
-                        case 10: openFileWithMimeType(file, "application/vnd.android.package-archive"); break;
-                        case 11: openFileWithMimeType(file, "application/zip"); break;
-                        case 12: openFileWithMimeType(file, "*/*"); break;
+                        case 5:
+                            openFileWithMimeType(file, "text/plain");
+                            break;
+                        case 6:
+                            openFileWithMimeType(file, "audio/*");
+                            break;
+                        case 7:
+                            openFileWithMimeType(file, "video/*");
+                            break;
+                        case 8:
+                            openFileWithMimeType(file, "image/*");
+                            break;
+                        case 9:
+                            openFileWithMimeType(file, "application/pdf");
+                            break;
+                        case 10:
+                            openFileWithMimeType(file, "application/vnd.android.package-archive");
+                            break;
+                        case 11:
+                            openFileWithMimeType(file, "application/zip");
+                            break;
+                        case 12:
+                            openFileWithMimeType(file, "*/*");
+                            break;
                     }
                 })
                 .show();
@@ -1741,7 +1799,7 @@ public class MainActivity extends AppCompatActivity {
     private void copyFile(File source, File destination) throws IOException {
         byte[] buffer = new byte[8192];
         try (FileInputStream input = new FileInputStream(source);
-             FileOutputStream output = new FileOutputStream(destination)) {
+                FileOutputStream output = new FileOutputStream(destination)) {
             int bytesRead;
             while ((bytesRead = input.read(buffer)) != -1) {
                 output.write(buffer, 0, bytesRead);
@@ -1820,9 +1878,8 @@ public class MainActivity extends AppCompatActivity {
         pendingHttpSharePath = target.getAbsolutePath();
         pendingFtpShare = false;
         if (Build.VERSION.SDK_INT >= 33
-                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS },
                     NOTIFICATION_PERMISSION_REQUEST_CODE);
             return;
         }
@@ -1843,9 +1900,8 @@ public class MainActivity extends AppCompatActivity {
         pendingHttpSharePath = target.getAbsolutePath();
         pendingFtpShare = true;
         if (Build.VERSION.SDK_INT >= 33
-                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS },
                     NOTIFICATION_PERMISSION_REQUEST_CODE);
             return;
         }
@@ -1864,34 +1920,37 @@ public class MainActivity extends AppCompatActivity {
         usernameInput.setHint("Username");
         usernameInput.setText(preferences.getString(PREF_HTTP_USERNAME, DEFAULT_HTTP_USERNAME));
         fields.addView(usernameInput, new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         EditText passwordInput = new EditText(this);
         passwordInput.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         passwordInput.setSingleLine(true);
         passwordInput.setHint(preferences.getString(PREF_HTTP_PASSWORD, "").isEmpty()
-            ? "Password (at least 8 characters)" : "New password, or blank to keep current");
+                ? "Password (at least 8 characters)"
+                : "New password, or blank to keep current");
         fields.addView(passwordInput, new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle("File share login")
-            .setMessage("Username: 1-64 printable characters, no colon. Password: at least 8 characters. HTTP and FTP do not encrypt credentials or file data.")
-            .setView(fields)
+                .setTitle("File share login")
+                .setMessage(
+                        "Username: 1-64 printable characters, no colon. Password: at least 8 characters. HTTP and FTP do not encrypt credentials or file data.")
+                .setView(fields)
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Save", null)
                 .create();
         dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                 .setOnClickListener(view -> {
-                String username = usernameInput.getText().toString().trim();
-                if (!isValidHttpUsername(username)) {
-                usernameInput.setError("Use 1-64 printable characters, without a colon");
-                return;
-                }
-                String typedPassword = passwordInput.getText().toString();
-                String password = typedPassword.isEmpty()
-                    ? preferences.getString(PREF_HTTP_PASSWORD, "") : typedPassword;
+                    String username = usernameInput.getText().toString().trim();
+                    if (!isValidHttpUsername(username)) {
+                        usernameInput.setError("Use 1-64 printable characters, without a colon");
+                        return;
+                    }
+                    String typedPassword = passwordInput.getText().toString();
+                    String password = typedPassword.isEmpty()
+                            ? preferences.getString(PREF_HTTP_PASSWORD, "")
+                            : typedPassword;
                     if (password.length() < 8) {
                         passwordInput.setError("Use at least 8 characters");
                         return;
@@ -2044,8 +2103,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void copyHttpShareUrl() {
         String urls = preferences.getBoolean(PREF_HTTP_ACTIVE, false)
-            ? preferences.getString(PREF_HTTP_URLS, "")
-            : preferences.getString(PREF_FTP_URLS, "");
+                ? preferences.getString(PREF_HTTP_URLS, "")
+                : preferences.getString(PREF_FTP_URLS, "");
         int lineBreak = urls.indexOf('\n');
         String firstUrl = lineBreak < 0 ? urls : urls.substring(0, lineBreak);
         if (firstUrl.isEmpty() || firstUrl.contains("<device-ip>")) {

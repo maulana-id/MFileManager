@@ -16,7 +16,7 @@
  * @author maulana-id
  */
 
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import com.github.junrar.Archive;
 import com.github.junrar.rarfile.FileHeader;
@@ -128,7 +128,7 @@ public final class ArchiveManager {
     public static String removeArchiveExtension(File archive) {
         String name = archive.getName();
         String lower = name.toLowerCase(Locale.ROOT);
-        String[] extensions = {".tar.gz", ".tgz", ".tar", ".zip", ".7z", ".rar", ".gz"};
+        String[] extensions = { ".tar.gz", ".tgz", ".tar", ".zip", ".7z", ".rar", ".gz" };
         for (String extension : extensions) {
             if (lower.endsWith(extension)) {
                 return name.substring(0, name.length() - extension.length());
@@ -142,7 +142,8 @@ public final class ArchiveManager {
         List<EntryInfo> entries = new ArrayList<>();
         if (name.endsWith(".zip")) {
             try (ZipFile zip = password == null || password.length == 0
-                    ? new ZipFile(archive) : new ZipFile(archive, password)) {
+                    ? new ZipFile(archive)
+                    : new ZipFile(archive, password)) {
                 for (net.lingala.zip4j.model.FileHeader header : zip.getFileHeaders()) {
                     entries.add(new EntryInfo(header.getFileName(), header.getUncompressedSize(),
                             header.getCompressedSize(), header.isDirectory()));
@@ -152,7 +153,8 @@ public final class ArchiveManager {
         }
         if (name.endsWith(".7z")) {
             try (SevenZFile sevenZ = password == null || password.length == 0
-                    ? new SevenZFile(archive) : new SevenZFile(archive, password)) {
+                    ? new SevenZFile(archive)
+                    : new SevenZFile(archive, password)) {
                 for (SevenZArchiveEntry entry : sevenZ.getEntries()) {
                     entries.add(new EntryInfo(entry.getName(), entry.getSize(),
                             -1, entry.isDirectory()));
@@ -162,7 +164,8 @@ public final class ArchiveManager {
         }
         if (name.endsWith(".rar")) {
             try (Archive rar = password == null || password.length == 0
-                    ? new Archive(archive) : new Archive(archive, new String(password))) {
+                    ? new Archive(archive)
+                    : new Archive(archive, new String(password))) {
                 for (FileHeader header : rar.getFileHeaders()) {
                     entries.add(new EntryInfo(header.getFileName(), header.getFullUnpackSize(),
                             header.getFullPackSize(), header.isDirectory()));
@@ -185,7 +188,7 @@ public final class ArchiveManager {
                     unpacked += count;
                 }
             }
-                entries.add(new EntryInfo(originalName, unpacked,
+            entries.add(new EntryInfo(originalName, unpacked,
                     archive.length(), false));
             return entries;
         }
@@ -202,7 +205,7 @@ public final class ArchiveManager {
     }
 
     public static Result create(List<File> sources, File destination, Format format,
-                                char[] password) throws Exception {
+            char[] password) throws Exception {
         if (sources.isEmpty()) {
             throw new IOException("Select at least one file or folder");
         }
@@ -299,7 +302,8 @@ public final class ArchiveManager {
     private static int extractZip(File archive, File destination, char[] password) throws Exception {
         int count = 0;
         try (ZipFile zip = password == null || password.length == 0
-                ? new ZipFile(archive) : new ZipFile(archive, password)) {
+                ? new ZipFile(archive)
+                : new ZipFile(archive, password)) {
             for (net.lingala.zip4j.model.FileHeader header : zip.getFileHeaders()) {
                 File target = safeTarget(destination, header.getFileName());
                 if (header.isDirectory()) {
@@ -310,7 +314,7 @@ public final class ArchiveManager {
                 }
                 ensureParent(target);
                 try (InputStream input = zip.getInputStream(header);
-                     OutputStream output = new BufferedOutputStream(new FileOutputStream(target))) {
+                        OutputStream output = new BufferedOutputStream(new FileOutputStream(target))) {
                     copy(input, output);
                 }
                 count++;
@@ -323,7 +327,8 @@ public final class ArchiveManager {
             throws IOException {
         int count = 0;
         try (SevenZFile sevenZ = password == null || password.length == 0
-                ? new SevenZFile(archive) : new SevenZFile(archive, password)) {
+                ? new SevenZFile(archive)
+                : new SevenZFile(archive, password)) {
             SevenZArchiveEntry entry;
             while ((entry = sevenZ.getNextEntry()) != null) {
                 File target = safeTarget(destination, entry.getName());
@@ -350,7 +355,8 @@ public final class ArchiveManager {
     private static int extractRar(File archive, File destination, char[] password) throws Exception {
         int count = 0;
         try (Archive rar = password == null || password.length == 0
-                ? new Archive(archive) : new Archive(archive, new String(password))) {
+                ? new Archive(archive)
+                : new Archive(archive, new String(password))) {
             for (FileHeader header : rar.getFileHeaders()) {
                 File target = safeTarget(destination, header.getFileName());
                 if (header.isDirectory()) {
@@ -402,7 +408,8 @@ public final class ArchiveManager {
                 new BufferedInputStream(new FileInputStream(archive)), true)) {
             String storedName = ((GzipCompressorInputStream) input).getMetaData().getFilename();
             String outputName = storedName == null || storedName.isEmpty()
-                    ? removeArchiveExtension(archive) : storedName;
+                    ? removeArchiveExtension(archive)
+                    : storedName;
             File target = safeTarget(destination, outputName);
             ensureParent(target);
             try (OutputStream output = new BufferedOutputStream(new FileOutputStream(target))) {
@@ -415,12 +422,14 @@ public final class ArchiveManager {
             throws IOException {
         OutputStream fileOutput = new BufferedOutputStream(new FileOutputStream(destination));
         try (ZipOutputStream zip = password == null || password.length == 0
-                ? new ZipOutputStream(fileOutput) : new ZipOutputStream(fileOutput, password)) {
+                ? new ZipOutputStream(fileOutput)
+                : new ZipOutputStream(fileOutput, password)) {
             for (SourceEntry source : entries) {
                 boolean directory = source.file.isDirectory();
                 ZipParameters parameters = new ZipParameters();
                 parameters.setFileNameInZip(directory && !source.name.endsWith("/")
-                        ? source.name + "/" : source.name);
+                        ? source.name + "/"
+                        : source.name);
                 parameters.setCompressionMethod(CompressionMethod.DEFLATE);
                 parameters.setCompressionLevel(CompressionLevel.NORMAL);
                 parameters.setLastModifiedFileTime(source.file.lastModified());
@@ -443,7 +452,8 @@ public final class ArchiveManager {
     private static void writeSevenZip(List<SourceEntry> entries, File destination, char[] password)
             throws IOException {
         try (SevenZOutputFile sevenZ = password == null || password.length == 0
-                ? new SevenZOutputFile(destination) : new SevenZOutputFile(destination, password)) {
+                ? new SevenZOutputFile(destination)
+                : new SevenZOutputFile(destination, password)) {
             for (SourceEntry source : entries) {
                 SevenZArchiveEntry entry = sevenZ.createArchiveEntry(source.file, source.name);
                 sevenZ.putArchiveEntry(entry);
@@ -487,8 +497,8 @@ public final class ArchiveManager {
         GzipParameters parameters = new GzipParameters();
         parameters.setFilename(source.getName());
         try (InputStream input = new BufferedInputStream(new FileInputStream(source));
-             OutputStream output = new GzipCompressorOutputStream(
-                 new BufferedOutputStream(new FileOutputStream(destination)), parameters)) {
+                OutputStream output = new GzipCompressorOutputStream(
+                        new BufferedOutputStream(new FileOutputStream(destination)), parameters)) {
             copy(input, output);
         }
     }
@@ -510,7 +520,7 @@ public final class ArchiveManager {
     }
 
     private static void addSourceEntries(File file, String entryName, String outputPath,
-                                         List<SourceEntry> entries) throws IOException {
+            List<SourceEntry> entries) throws IOException {
         File canonical = file.getCanonicalFile();
         if (!canonical.equals(file.getAbsoluteFile())) {
             return;

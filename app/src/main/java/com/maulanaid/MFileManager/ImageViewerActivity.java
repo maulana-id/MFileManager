@@ -16,7 +16,7 @@
  * @author maulana-id
  */
 
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -80,8 +80,10 @@ public class ImageViewerActivity extends AppCompatActivity {
             public boolean onScale(ScaleGestureDetector detector) {
                 float factor = detector.getScaleFactor();
                 float newScale = scaleFactor * factor;
-                if (newScale < MIN_SCALE) factor = MIN_SCALE / scaleFactor;
-                if (newScale > MAX_SCALE) factor = MAX_SCALE / scaleFactor;
+                if (newScale < MIN_SCALE)
+                    factor = MIN_SCALE / scaleFactor;
+                if (newScale > MAX_SCALE)
+                    factor = MAX_SCALE / scaleFactor;
                 scaleFactor = Math.max(MIN_SCALE, Math.min(scaleFactor * factor, MAX_SCALE));
                 matrix.postScale(factor, factor,
                         detector.getFocusX(), detector.getFocusY());
@@ -157,11 +159,13 @@ public class ImageViewerActivity extends AppCompatActivity {
     }
 
     private void fitImageToView() {
-        if (currentBitmap == null || imageView == null) return;
+        if (currentBitmap == null || imageView == null)
+            return;
         imageView.post(() -> {
             float viewW = imageView.getWidth();
             float viewH = imageView.getHeight();
-            if (viewW <= 0 || viewH <= 0) return;
+            if (viewW <= 0 || viewH <= 0)
+                return;
             float bmpW = currentBitmap.getWidth();
             float bmpH = currentBitmap.getHeight();
             float scale = Math.min(viewW / bmpW, viewH / bmpH);

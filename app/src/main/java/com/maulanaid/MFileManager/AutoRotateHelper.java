@@ -16,7 +16,7 @@
  * @author maulana-id
  */
 
-package com.maulana.MFileManager;
+package com.maulanaid.MFileManager;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -39,8 +39,7 @@ public class AutoRotateHelper {
         try {
             return Settings.System.getInt(
                     activity.getContentResolver(),
-                    Settings.System.ACCELEROMETER_ROTATION, 0
-            ) == 1;
+                    Settings.System.ACCELEROMETER_ROTATION, 0) == 1;
         } catch (Exception e) {
             return false;
         }
@@ -71,8 +70,7 @@ public class AutoRotateHelper {
                 activity.getContentResolver().registerContentObserver(
                         Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION),
                         false,
-                        rotationObserver
-                );
+                        rotationObserver);
             } catch (Exception ignored) {
             }
         }
