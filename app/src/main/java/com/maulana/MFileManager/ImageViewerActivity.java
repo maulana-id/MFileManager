@@ -18,11 +18,13 @@
 
 package com.maulana.MFileManager;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -30,23 +32,29 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ImageViewerActivity extends AppCompatActivity {
 
     public static final String EXTRA_FILE_PATH = "file_path";
 
+    private AutoRotateHelper autoRotateHelper;
     private ImageView imageView;
     private ScaleGestureDetector scaleDetector;
+    private GestureDetector gestureDetector;
     private final Matrix matrix = new Matrix();
     private float scaleFactor = 1f;
     private float lastTouchX, lastTouchY;
+    private Bitmap currentBitmap;
     private static final float MIN_SCALE = 0.5f;
     private static final float MAX_SCALE = 8f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        autoRotateHelper = new AutoRotateHelper(this);
+        autoRotateHelper.updateOrientation();
         setContentView(R.layout.activity_image_viewer);
 
         String filePath = getIntent().getStringExtra(EXTRA_FILE_PATH);
@@ -82,8 +90,17 @@ public class ImageViewerActivity extends AppCompatActivity {
             }
         });
 
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(@NonNull MotionEvent e) {
+                fitImageToView();
+                return true;
+            }
+        });
+
         imageView.setScaleType(ImageView.ScaleType.MATRIX);
         imageView.setOnTouchListener((v, event) -> {
+            gestureDetector.onTouchEvent(event);
             scaleDetector.onTouchEvent(event);
             if (!scaleDetector.isInProgress()) {
                 switch (event.getAction()) {
@@ -103,9 +120,58 @@ public class ImageViewerActivity extends AppCompatActivity {
             }
             return true;
         });
+    }
 
-        // Double-tap to reset zoom
-        imageView.setOnClickListener(null);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (autoRotateHelper != null) {
+            autoRotateHelper.register();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        fitImageToView();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (autoRotateHelper != null) {
+            autoRotateHelper.unregister();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (autoRotateHelper != null) {
+            autoRotateHelper.unregister();
+        }
+        if (currentBitmap != null && !currentBitmap.isRecycled()) {
+            currentBitmap.recycle();
+            currentBitmap = null;
+        }
+        super.onDestroy();
+    }
+
+    private void fitImageToView() {
+        if (currentBitmap == null || imageView == null) return;
+        imageView.post(() -> {
+            float viewW = imageView.getWidth();
+            float viewH = imageView.getHeight();
+            if (viewW <= 0 || viewH <= 0) return;
+            float bmpW = currentBitmap.getWidth();
+            float bmpH = currentBitmap.getHeight();
+            float scale = Math.min(viewW / bmpW, viewH / bmpH);
+            scaleFactor = scale;
+            matrix.reset();
+            matrix.postScale(scale, scale);
+            matrix.postTranslate((viewW - bmpW * scale) / 2f,
+                    (viewH - bmpH * scale) / 2f);
+            imageView.setImageMatrix(matrix);
+        });
     }
 
     private void loadBitmap(String filePath) {
@@ -127,22 +193,10 @@ public class ImageViewerActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath, opts);
 
                 if (bitmap != null) {
+                    currentBitmap = bitmap;
                     runOnUiThread(() -> {
                         imageView.setImageBitmap(bitmap);
-                        // Center the image via matrix after layout
-                        imageView.post(() -> {
-                            float viewW = imageView.getWidth();
-                            float viewH = imageView.getHeight();
-                            float bmpW = bitmap.getWidth();
-                            float bmpH = bitmap.getHeight();
-                            float scale = Math.min(viewW / bmpW, viewH / bmpH);
-                            scaleFactor = scale;
-                            matrix.reset();
-                            matrix.postScale(scale, scale);
-                            matrix.postTranslate((viewW - bmpW * scale) / 2f,
-                                    (viewH - bmpH * scale) / 2f);
-                            imageView.setImageMatrix(matrix);
-                        });
+                        fitImageToView();
                     });
                 } else {
                     runOnUiThread(() -> finish());

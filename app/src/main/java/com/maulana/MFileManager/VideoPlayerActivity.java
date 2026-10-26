@@ -32,6 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import android.content.res.Configuration;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Locale;
@@ -40,6 +42,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     public static final String EXTRA_FILE_PATH = "file_path";
 
+    private AutoRotateHelper autoRotateHelper;
     private VideoView videoView;
     private SeekBar seekBar;
     private TextView currentTimeView, durationView;
@@ -52,6 +55,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        autoRotateHelper = new AutoRotateHelper(this);
+        autoRotateHelper.updateOrientation();
         setContentView(R.layout.activity_video_player);
 
         String filePath = getIntent().getStringExtra(EXTRA_FILE_PATH);
@@ -147,8 +152,27 @@ public class VideoPlayerActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (autoRotateHelper != null) {
+            autoRotateHelper.register();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (videoView != null) {
+            videoView.requestLayout();
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
+        if (autoRotateHelper != null) {
+            autoRotateHelper.unregister();
+        }
         if (videoView.isPlaying()) {
             videoView.pause();
             isPlaying = false;
@@ -159,6 +183,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (autoRotateHelper != null) {
+            autoRotateHelper.unregister();
+        }
         handler.removeCallbacks(updateSeekBar);
         videoView.stopPlayback();
         super.onDestroy();
